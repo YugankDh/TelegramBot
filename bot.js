@@ -67,6 +67,21 @@ async function query(data) {
     return result
 }
 
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+    const userName = msg.from.first_name;
+
+    const greeting = `Hello ${userName}! 👋\n\nWelcome to the bot. Here are some commands you can use:\n\n` +
+        `/chat [prompt] - Generate AI content\n` +
+        `/imagine [prompt] - Generate an AI image\n` +
+        `$quote - Get a random quote\n` +
+        `$fact - Get a random fact\n` +
+        `$meme - Get a random meme\n\n` +
+        `Feel free to try them out!`;
+
+    bot.sendMessage(chatId, greeting);
+});
+
 // Command to generate AI image
 bot.onText(/\/imagine (.+)/, async (msg, match) => {
     const chatId = msg.chat.id
