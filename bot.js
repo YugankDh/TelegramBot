@@ -67,19 +67,6 @@ async function query(data) {
     return result
 }
 
-async function getWeather(city) {
-    try {
-        const response = await fetch(
-            `${weather_apiurl}?q=${city}&appid=${weather_api_key}&units=metric`
-        )
-        const data = await response.json()
-        if (data.cod !== 200) throw new Error(data.message)
-        return `Weather in ${data.name}: ${data.weather[0].description}, Temperature: ${data.main.temp}°C`
-    } catch (error) {
-        console.error("Error fetching weather:", error)
-        return "An error occurred while fetching the weather."
-    }
-}
 
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
@@ -96,7 +83,7 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(chatId, greeting);
 });
 
-// Command to generate AI image
+// Command to generate AI images
 bot.onText(/\/imagine (.+)/, async (msg, match) => {
     const chatId = msg.chat.id
     const prompt = match[1]
@@ -147,26 +134,6 @@ bot.onText(/\/chat (.+)/, async (msg, match) => {
 const weather_apiurl = "https://api.openweathermap.org/data/2.5/weather"
 const weather_api_key = process.env.WEATHER_API_KEY
 
-
-
-bot.onText(/\/weather (.+)/, async (msg, match) => {
-    const chatId = msg.chat.id
-    const city = match[1]
-
-    if (!city) {
-        return bot.sendMessage(
-            chatId,
-            "Please provide a city name after the /weather command."
-        )
-    }
-
-    try {
-        const weatherReport = await getWeather(city)
-        bot.sendMessage(chatId, weatherReport)
-    } catch (error) {
-        bot.sendMessage(chatId, "An error occurred while fetching weather information.")
-    }
-})
 
 
 // Handling other messages
