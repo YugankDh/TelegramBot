@@ -75,6 +75,7 @@ bot.onText(/\/start/, (msg) => {
     const greeting = `Hello ${userName}! 👋\n\nWelcome to the bot. Here are some commands you can use:\n\n` +
         `/chat [prompt] - Generate AI content\n` +
         `/imagine [prompt] - Generate an AI image\n` +
+        `/weather [prompt] - Get weather upadte on any city\n` +
         `$quote - Get a random quote\n` +
         `$fact - Get a random fact\n` +
         `$meme - Get a random meme\n\n` +
@@ -82,6 +83,33 @@ bot.onText(/\/start/, (msg) => {
 
     bot.sendMessage(chatId, greeting);
 });
+
+//get weather function
+bot.onText(/\/weather (.+)/, async (msg, match) => {
+    const chatId = msg.chat.id;
+    const city = match[1];
+
+    try {
+        const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=${process.env.weather_api}&q=${city}&aqi=no`);
+        const weatherData = await response.json();
+
+        if (weatherData.error) {
+            bot.sendMessage(chatId, `Error: ${weatherData.error.message}`);
+        } else {
+            // console.log(weatherData);
+            const { name, region, country } = weatherData.location
+            const { temp_c, condition, feelslike_c } = weatherData.current;
+            const message = `🌤️ Weather in ${name}, ${region}, ${country}:\n` +
+                `Temperature: ${temp_c}°C\n` +
+                `feels like: ${feelslike_c}°C\n` +
+                `Condition: ${condition.text}`;
+            bot.sendMessage(chatId, message);
+        }
+    } catch (error) {
+        bot.sendMessage(chatId, 'Failed to retrieve weather data. Please try again later.');
+    }
+});
+
 
 // Command to generate AI images
 bot.onText(/\/imagine (.+)/, async (msg, match) => {
