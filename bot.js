@@ -124,7 +124,7 @@ bot.onText(/\/imagine (.+)/, async (msg, match) => {
     }
 
     try {
-    	bot.sendMessage(chatId,"Working my brain!")
+        bot.sendMessage(chatId,"Working my brain!")
         const final = await query({ inputs: prompt })
         const arraybuffer = await final.arrayBuffer()
         const imggen = Buffer.from(arraybuffer)
