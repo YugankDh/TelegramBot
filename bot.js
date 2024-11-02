@@ -18,6 +18,7 @@ async function getFact() {
     }
 }
 
+
 async function getQuote() {
     try {
         const response = await fetch(quote_apiurl)
